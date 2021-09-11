@@ -16,7 +16,27 @@
 #'    
 #' @export
 #'
-#'
+#' @examples
+#' #Create mif object
+#' library(dplyr)
+#' x <- create_mif(clinical_data = example_clinical %>% 
+#' mutate(deidentified_id = as.character(deidentified_id)),
+#' sample_data = example_summary %>% 
+#' mutate(deidentified_id = as.character(deidentified_id)),
+#' spatial_list = example_spatial,
+#' patient_id = "deidentified_id", 
+#' sample_id = "deidentified_sample")
+#' 
+#' mnames_good <- c("CD3..Opal.570..Positive","CD8..Opal.520..Positive",
+#' "FOXP3..Opal.620..Positive","PDL1..Opal.540..Positive",
+#' "PD1..Opal.650..Positive","CD3..CD8.","CD3..FOXP3.")
+#' 
+#' x <- plot_immunoflo(x, plot_title = "deidentified_sample", mnames = mnames_good, 
+#' cell_type = "Classifier.Label")
+#' 
+#' x[["derived"]][["spatial_plots"]][[4]]
+
+
 plot_immunoflo <- function(
   mif,
   plot_title, 
@@ -97,7 +117,7 @@ plot_immunoflo <- function(
         ggplot2::scale_color_manual(NULL, values = mcolors, drop = FALSE) +
         ggplot2::theme_bw(base_size = 18) +
         ggplot2::theme(axis.title = ggplot2::element_blank(),
-                       panel.grid = ggplot2::element_blank())
+                       panel.grid = ggplot2::element_blank()) 
     }else{
     basic_plot <- plot_data %>% 
       dplyr::filter(.data$indicator == 1) %>% 
@@ -121,6 +141,8 @@ plot_immunoflo <- function(
       ggplot2::theme(axis.title = ggplot2::element_blank(),
                     panel.grid = ggplot2::element_blank())
     }
+    basic_plot = basic_plot + 
+      ggplot2::scale_y_reverse()
     return(basic_plot)
     
   })

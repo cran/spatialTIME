@@ -44,7 +44,7 @@ uni_K = function(data = data, iter, marker, id, correction, r_value, win){
 
 
 uni_Rip_K = function(data, markers, id, num_iters, correction = 'trans', method = 'K', 
-                     perm_dist, r){
+                     perm_dist, r,xloc, yloc){
   #Main function
   #Check if the method is selected from K, L, M
   if(!(method %in% c('K',"L","M"))){
@@ -67,6 +67,18 @@ uni_Rip_K = function(data, markers, id, num_iters, correction = 'trans', method 
     correction = 'iso'
   }
   
+  
+  if(is.null(xloc) + is.null(yloc) == 1){
+    stop("Both xloc and yloc must be either NULL or a defined column")
+  }
+  
+  if(!is.null(xloc) && !is.null(yloc)){
+    data = data %>%
+      dplyr::mutate(XMin = get(xloc),
+             XMax = get(xloc),
+             YMin = get(yloc),
+             YMax = get(yloc))
+  }
   #Use set the cell location as the center of the cell
   data = data %>% 
     dplyr::mutate(xloc = (XMin + XMax)/2,
@@ -95,7 +107,7 @@ uni_Rip_K = function(data, markers, id, num_iters, correction = 'trans', method 
                                     marker = .x, correction = correction,
                                     id = id, r_value = r,
                                     win = win)) %>%
-    dplyr::select(-iter) 
+    dplyr::select(-iter)
   colnames(obs)[c(1,4,5)] = c(id, 'Theoretical CSR', 'Observed K')
   
   final = suppressMessages(dplyr::left_join(perms, obs))
@@ -126,12 +138,12 @@ uni_Rip_K = function(data, markers, id, num_iters, correction = 'trans', method 
       dplyr::mutate('Degree of Clustering Permutation' = `Observed K` - `Permuted K`,
              'Degree of Clustering Theoretical' = `Observed K` - `Theoretical CSR`)
   }
-  
+
   if(!perm_dist){
     final = final %>% 
       dplyr::mutate(id = get(id)) %>%
       dplyr::select(-(1:2)) %>%
-      dplyr::group_by(id,Marker, r) %>%
+      dplyr::group_by(id, Marker, r) %>%
       #dplyr::summarize(`Theoretical CSR` = mean(`Theoretical CSR`, na.rm = TRUE),
       #          `Permuted CSR` = mean(.[[grep('Permuted', colnames(.), value = TRUE)]], na.rm = TRUE),
       #          `Observed` = mean(.[[grep('Observed', colnames(.), value = TRUE)]], na.rm = TRUE),
@@ -139,8 +151,10 @@ uni_Rip_K = function(data, markers, id, num_iters, correction = 'trans', method 
       #          `Degree of Clustering Permutation` =  mean(`Degree of Clustering Permutation`, na.rm = TRUE)
       #          )
       dplyr::summarize_all(~mean(., na.rm = TRUE))
+      colnames(final)[1] = id
+  }else{
+    colnames(final)[2] = id
   }
-  colnames(final)[1] = id
   return(final)
 }
 
@@ -182,7 +196,7 @@ bi_K = function(data, mark_pair, r, correction, id, iter, win){
 }
 
 bi_Rip_K = function(data, markers, id, num_iters, correction = 'trans', 
-                    method, perm_dist, r, exhaustive){
+                    method, perm_dist, r, exhaustive, xloc, yloc){
   #Main function
   #Check if the method is selected from K, L, M
   if(!(method %in% c('K',"L","M"))){
@@ -211,6 +225,19 @@ bi_Rip_K = function(data, markers, id, num_iters, correction = 'trans',
   
   if(correction == 'isotropic'){
     correction = 'iso'
+  }
+  
+  
+  if(is.null(xloc) + is.null(yloc) == 1){
+    stop("Both xloc and yloc must be either NULL or a defined column")
+  }
+  
+  if(!is.null(xloc) && !is.null(yloc)){
+    data = data %>%
+      dplyr::mutate(XMin = get(xloc),
+                    XMax = get(xloc),
+                    YMin = get(yloc),
+                    YMax = get(yloc))
   }
   
   #Use set the cell location as the center of the cell
@@ -291,13 +318,13 @@ bi_Rip_K = function(data, markers, id, num_iters, correction = 'trans',
       dplyr::mutate('Degree of Clustering Permutation' = `Observed K` - `Permuted K`,
              'Degree of Clustering Theoretical' = `Observed K` - `Theoretical CSR`)
   }
-  
+  colnames(final)[2] = id
   if(!perm_dist){
     final = final %>% 
-      dplyr::mutate(id = get(id)) %>%
+      dplyr::mutate(id = .data[[id]]) %>%
       dplyr::select(-c(1,2)) %>%
       dplyr::group_by(id, anchor, counted, r) %>%
-      #dplyr::summarize(`Theoretical CSR` = mean(`Theoretical CSR`),
+      #dplyr::summarize(`Theoretical CSR` = mean(`Theoretical CSR`,na.rm = TRUE),
       #          `Permuted CSR` = mean(.[[grep('Permuted', colnames(.), value = TRUE)]],
       #                                na.rm = TRUE),
       #          `Observed` = mean(.[[grep('Observed', colnames(.), value = TRUE)]],
@@ -305,10 +332,12 @@ bi_Rip_K = function(data, markers, id, num_iters, correction = 'trans',
       #          `Degree of Clustering Theoretical` = mean(`Degree of Clustering Theoretical`,
       #                                                    na.rm = TRUE),
       #          `Degree of Clustering Permutation` =  mean(`Degree of Clustering Permutation`,
-      #          na.rm = TRUE))
+      #                                                     na.rm = TRUE))
       dplyr::summarize_all(~mean(.,na.rm = TRUE))
+    colnames(final)[1] = id
+  }else{
+    colnames(final)[2] = id
   }
-  colnames(final)[1] = id
   return(final)
 }
 
@@ -350,12 +379,24 @@ uni_G = function(data = data, iter, marker, id, correction, r_value, win){
 
 
 uni_NN_G = function(data, markers, id, num_iters, correction,
-                    perm_dist, r){
+                    perm_dist, r, xloc, yloc){
   #Main function
   
   #Notice that this follows spatstat's notation and argument name
   if(!(correction %in% c("rs", "km", "han"))){
     stop("Did not provide a valid edge correcion method.")
+  }
+  
+  if(is.null(xloc) + is.null(yloc) == 1){
+    stop("Both xloc and yloc must be either NULL or a defined column")
+  }
+  
+  if(!is.null(xloc) && !is.null(yloc)){
+    data = data %>%
+      dplyr::mutate(XMin = get(xloc),
+                    XMax = get(xloc),
+                    YMin = get(yloc),
+                    YMax = get(yloc))
   }
   
   #Use set the cell location as the center of the cell
@@ -393,13 +434,12 @@ uni_NN_G = function(data, markers, id, num_iters, correction,
   final = suppressMessages(dplyr::left_join(perms, obs)) %>%
     dplyr::mutate(
       `Degree of Clustering Theoretical` = (`Observed`) - (`Theoretical CSR`),
-      `Degree of Clustering Permutation` = (`Observed`) - (`Permuted CSR`)) %>%
-    dplyr::select(-iter)
+      `Degree of Clustering Permutation` = (`Observed`) - (`Permuted CSR`))
   
   if(!perm_dist){
     final = final %>% 
       dplyr::mutate(id = .data[[id]]) %>%
-      dplyr::select(-1) %>%
+      dplyr::select(-(1:2)) %>%
       dplyr::group_by(id, Marker, r) %>%
       #dplyr::summarize(`Theoretical CSR` = mean(`Theoretical CSR`,na.rm = TRUE),
       #                 `Permuted CSR` = mean(.[[grep('Permuted', colnames(.), value = TRUE)]],
@@ -412,9 +452,9 @@ uni_NN_G = function(data, markers, id, num_iters, correction,
       #                                                            na.rm = TRUE))
       dplyr::summarize_all(~mean(.,na.rm = TRUE))
     colnames(final)[1] = id
+  }else{
+    colnames(final)[2] = id
   }
-  
-  
   return(final) 
 }
 
@@ -459,7 +499,7 @@ bi_G = function(data, mark_pair, r, correction, id, iter, win){
 }
 
 bi_NN_G_sample = function(data, markers, id, num_iters, correction, 
-                   perm_dist, r, exhaustive){
+                   perm_dist, r, exhaustive, xloc, yloc){
   #Main function
   #Notice that this follows spatstat's notation and argument name
   if(!(correction %in% c('rs', 'hans'))){
@@ -473,7 +513,19 @@ bi_NN_G_sample = function(data, markers, id, num_iters, correction,
   if(exhaustive == TRUE & class(markers) != 'character'){
     stop("If exhaustive == TRUE, then markers must be a character vector")
   }
+
   
+  if(is.null(xloc) + is.null(yloc) == 1){
+    stop("Both xloc and yloc must be either NULL or a defined column")
+  }
+  
+  if(!is.null(xloc) && !is.null(yloc)){
+    data = data %>%
+      dplyr::mutate(XMin = get(xloc),
+                    XMax = get(xloc),
+                    YMin = get(yloc),
+                    YMax = get(yloc))
+  }
   
   #Use set the cell location as the center of the cell
   data = data %>% 
@@ -527,7 +579,7 @@ bi_NN_G_sample = function(data, markers, id, num_iters, correction,
   final = suppressMessages(dplyr::left_join(perm, obs)) %>%
     dplyr::mutate(`Degree of Clustering Permutation` = ifelse(`Permuted G` == 0, NA, (`Observed G`)-(`Permuted G`)),
            `Degree of Clustering Theoretical` = ifelse(`Theoretical CSR` == 0, NA, (`Observed G`)-(`Theoretical CSR`)))
-  
+  colnames(final)[2] = id
   if(!perm_dist){
     final = final %>% 
       dplyr::mutate(id = .data[[id]]) %>%
@@ -543,8 +595,18 @@ bi_NN_G_sample = function(data, markers, id, num_iters, correction,
       #          `Degree of Clustering Permutation` =  mean(`Degree of Clustering Permutation`,
       #                                                     na.rm = TRUE))
       dplyr::summarize_all(~mean(.,na.rm = TRUE))
-
     colnames(final)[1] = id
+  }else{
+    colnames(final)[2] = id
   }
+  
+  
   return(final)
 }
+
+list.append = function(list, new){
+  new_list = list
+  new_list[[length(new_list) + 1]] = new
+  return(new_list)
+}
+
