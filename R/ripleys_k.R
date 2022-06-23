@@ -62,7 +62,7 @@ ripleys_k = function(mif, mnames, r_range = seq(0, 100, 50),
                         method = 'K',keep_perm_dis = FALSE, workers = 1,
                         overwrite = FALSE, xloc = NULL, yloc = NULL){
   
-  future::plan(future::multisession, workers = workers)
+  future::plan(future::multisession, workers = workers, gc = T)
   data = mif$spatial
   id = mif$sample_id
   if(overwrite == FALSE){
@@ -165,7 +165,7 @@ bi_ripleys_k <- function(mif,
                             overwrite = FALSE,
                          xloc = NULL, yloc = NULL){
 
-  future::plan(future::multisession, workers = workers)
+  future::plan(future::multisession, workers = workers, gc=T)
   data = mif$spatial
   id = mif$sample_id
   if(overwrite == FALSE){
@@ -258,7 +258,7 @@ NN_G = function(mif, mnames, r_range = seq(0, 100, 50),
                 num_permutations = 50, edge_correction = "rs",
                 keep_perm_dis = FALSE, workers = 1,
                 overwrite = FALSE, xloc = NULL, yloc = NULL){
-  future::plan(future::multisession, workers = workers)
+  future::plan(future::multisession, workers = workers, gc=T)
   data = mif$spatial
   id = mif$sample_id
   if(overwrite == FALSE){
@@ -353,7 +353,7 @@ bi_NN_G = function(mif, mnames, r_range = seq(0, 100, 50),
                    keep_perm_dis = FALSE, exhaustive = TRUE,
                    workers = 1, overwrite = FALSE, xloc = NULL, yloc = NULL){
 
-  future::plan(future::multisession, workers = workers)
+  future::plan(future::multisession, workers = workers, gc=T)
   data = mif$spatial
   id = mif$sample_id
   if(overwrite == FALSE){

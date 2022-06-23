@@ -1,6 +1,6 @@
 Package: spatialTIME
 Title: Spatial Analysis of Vectra Immunoflourescent Data
-Version: 1.2.0
+Version: 1.2.1
 Authors@R: 
      c(person(given = "Jordan", family = "Creed", role = "aut",
              email = "jordan.h.creed@moffitt.org"),
@@ -8,8 +8,10 @@ Authors@R:
              email = "ram.thapa@moffitt.org"),
       person(given = "Christopher", family = "Wilson", role = "aut",
              email = "christopher.wilson@moffitt.org"),
-             person(given = "Alex", family = "Soupir", role = "aut",
+      person(given = "Alex", family = "Soupir", role = "aut",
              email = "alex.soupir@moffitt.org"),
+      person(given = "Oscar", family = "Ospina", role = "aut",
+             email = "oscar.ospina@moffitt.org"),
       person(given = "Brooke", family = "Fridley", role = "cph",
              email = "brooke.fridley@moffitt.org"),
       person(given = "Fridley", family = "Lab", role = "cre",
@@ -21,24 +23,24 @@ Description: Visualization and analysis  of Vectra Immunoflourescent
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.0
 Imports: magrittr, dplyr, tidyr, ggplot2, scales, grDevices, purrr,
         rlang, plyr, spatstat.geom, spatstat.core, RColorBrewer, stats,
-        rlist, furrr, future, tidyselect, crayon, pheatmap, ggpubr,
-        viridis
+        furrr, future, tidyselect, crayon, pheatmap, viridis, gridExtra
 Depends: R (>= 3.5.0)
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 URL: https://github.com/FridleyLab/spatialTIME
 BugReports: https://github.com/FridleyLab/spatialTIME/issues
 NeedsCompilation: no
-Packaged: 2021-09-10 13:52:40 UTC; 4468179
+Packaged: 2022-06-23 15:16:28 UTC; 4471592
 Author: Jordan Creed [aut],
   Ram Thapa [aut],
   Christopher Wilson [aut],
   Alex Soupir [aut],
+  Oscar Ospina [aut],
   Brooke Fridley [cph],
   Fridley Lab [cre]
 Maintainer: Fridley Lab <fridley.lab@moffitt.org>
 Repository: CRAN
-Date/Publication: 2021-09-11 04:10:02 UTC
+Date/Publication: 2022-06-23 15:50:02 UTC
