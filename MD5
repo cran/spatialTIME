@@ -1,4 +1,4 @@
-16d98c3d535d3bda99cfd173ada24d37 *DESCRIPTION
+47ae421fa2f5f014807b28f733c8e0df *DESCRIPTION
 3003d86b8f2eb1a38c286b6ebf649efd *LICENSE
 227d673b74d4b9a1aa02e6d3154a40c2 *NAMESPACE
 63607877758c4f91d72483ce5ce78e5f *R/create_mif.R
@@ -8,18 +8,18 @@ eb3be03787ebc7c0dc92f8f2c0c4e2b6 *R/data-example-summary.R
 8f1f12cf354163cf07bd4a706d32eb21 *R/global.R
 6156f326496b485204c7235df65aee62 *R/plot_immunoflo.R
 6482a298c8531387941099bc8693b70b *R/print.R
-ca4e65d1537f2364a410d79b23bec17e *R/ripleys_k.R
+4cb3b57191269882b6ee406076ec2dc8 *R/ripleys_k.R
 a04fbf885485a77fa99fba68060d0abd *R/subset_mif.R
-cac6479317628007be311090a9fba4b4 *R/utils-helpers.R
+237260ec8ad5756148975c207fda7b92 *R/utils-helpers.R
 65cef5e0674056f6fc07dd2b3ca85c13 *R/utils-pipe.R
 2dfda853339e7f651b097372ebfce8e9 *README.md
-bdb2e159b1e52b9b051cd77b47ea4f38 *build/vignette.rds
+1c16a86c3ab59a60e7a1d6b7ccd8a453 *build/vignette.rds
 b3e6f1eb479cc3afc6058fc9e1000434 *data/example_clinical.rda
 808ac839594376d9a61c578a9e4e22da *data/example_spatial.rda
 9c0c6cc1e8ecc59cc8ebcb528a1fee10 *data/example_summary.rda
-705122de1ec8bb45e4be5611ed19f29c *inst/doc/intro.R
-a017466b942fdcf0b4bd12d88ed4f096 *inst/doc/intro.Rmd
-21ca648ddc47a19b44b19d4f5c4b44a3 *inst/doc/intro.html
+deba9f83fa825b11b3062ca32d50e57d *inst/doc/intro.R
+f45aa53e856d4e8e0f3741e6975abc00 *inst/doc/intro.Rmd
+ec863fa775f851cc990e249c6ed2ccf9 *inst/doc/intro.html
 550c040319e10636cd2d83e15c26c4ea *man/NN_G.Rd
 e5b1d4b8042d60fbb0861c0a65846ac4 *man/bi_NN_G.Rd
 cc758f6d0794f1585d78d32e72912fab *man/bi_ripleys_k.Rd
@@ -34,4 +34,4 @@ ac51a4c1be70e298ad745fb167cd546f *man/hex_sticker/hex_script.R
 decb314365e5c96b59ae3ca00aaaac80 *man/plot_immunoflo.Rd
 661453d2d24cdb282d2318b906ea69eb *man/ripleys_k.Rd
 32e41b2c078c626f7d5a55468663ce7e *man/subset_mif.Rd
-a017466b942fdcf0b4bd12d88ed4f096 *vignettes/intro.Rmd
+f45aa53e856d4e8e0f3741e6975abc00 *vignettes/intro.Rmd

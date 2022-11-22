@@ -1,6 +1,6 @@
 Package: spatialTIME
 Title: Spatial Analysis of Vectra Immunoflourescent Data
-Version: 1.2.1
+Version: 1.2.2
 Authors@R: 
      c(person(given = "Jordan", family = "Creed", role = "aut",
              email = "jordan.h.creed@moffitt.org"),
@@ -23,17 +23,17 @@ Description: Visualization and analysis  of Vectra Immunoflourescent
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.0
+RoxygenNote: 7.2.2
 Imports: magrittr, dplyr, tidyr, ggplot2, scales, grDevices, purrr,
-        rlang, plyr, spatstat.geom, spatstat.core, RColorBrewer, stats,
-        furrr, future, tidyselect, crayon, pheatmap, viridis, gridExtra
+        rlang, plyr, spatstat.geom, spatstat.explore, RColorBrewer,
+        furrr, gridExtra, future, tidyselect, crayon, pheatmap
 Depends: R (>= 3.5.0)
 Suggests: knitr, rmarkdown, testthat
 VignetteBuilder: knitr
 URL: https://github.com/FridleyLab/spatialTIME
 BugReports: https://github.com/FridleyLab/spatialTIME/issues
 NeedsCompilation: no
-Packaged: 2022-06-23 15:16:28 UTC; 4471592
+Packaged: 2022-11-22 16:59:45 UTC; 4471592
 Author: Jordan Creed [aut],
   Ram Thapa [aut],
   Christopher Wilson [aut],
@@ -43,4 +43,4 @@ Author: Jordan Creed [aut],
   Fridley Lab [cre]
 Maintainer: Fridley Lab <fridley.lab@moffitt.org>
 Repository: CRAN
-Date/Publication: 2022-06-23 15:50:02 UTC
+Date/Publication: 2022-11-22 17:30:02 UTC
