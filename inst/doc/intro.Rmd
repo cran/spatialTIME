@@ -29,6 +29,15 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(tidyselect)
+library(RColorBrewer)
+library(pheatmap)
+
+getColors = function(n){
+  #https://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r
+  qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+  col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+  sample(col_vector, n)
+}
 ```
 
 # Background for Tissue Microarray (TMA) Data 
@@ -105,7 +114,7 @@ bad_names <- x[["derived"]][["spatial_plots"]][[4]] +
                      labels = mnames_bad %>%
                        gsub("..Opal.*", "+", .) %>% 
                        gsub("\\.\\.", "+", .) %>% 
-                       gsub("\\.", "+", .))
+                       gsub("\\.", "+", .)) 
 
 mnames_good <- c("CD3..Opal.570..Positive","CD8..Opal.520..Positive",
                  "FOXP3..Opal.620..Positive","PDL1..Opal.540..Positive",
@@ -294,11 +303,10 @@ The interpretation of the bivariate nearest neighbor distribution is similar to 
 
 ```{r,fig.width=10, fig.height=6, fig.align = 'center'}
 x <- bi_NN_G(mif = x, mnames = c("CD3..CD8.", "CD3..FOXP3."), num_permutations = 10,
-               edge_correction = 'rs', r = seq(0,100,10),
-               keep_perm_dis = FALSE, workers = 1, overwrite = TRUE)
+               edge_correction = 'rs', r = 0:100, workers = 1, overwrite = TRUE)
 
 x$derived$bivariate_NN  %>%
-  filter(anchor == 'CD3..FOXP3.') %>%
+  filter(Anchor == 'CD3..FOXP3.') %>%
   ggplot(aes(x = r, y = `Degree of Clustering Permutation`)) +
   geom_line(aes(color = deidentified_sample), show.legend = TRUE) +
   theme_bw() +  scale_color_manual(values = values)
@@ -402,7 +410,7 @@ rownames(annotation) = annotation$deidentified_sample
 annotation = annotation %>%
   select(status)
   
-pheatmap::pheatmap(Rip_K_matrix, treeheight_row = 0, treeheight_col = 0, 
+pheatmap(Rip_K_matrix, treeheight_row = 0, treeheight_col = 0, 
                    cluster_cols = FALSE, annotation = annotation)
 ```
 
@@ -412,7 +420,7 @@ If `xloc` and `yloc` are set as `NULL`, when computing spatial clustering than t
 
 ```{r}
 x <- ripleys_k(mif = x, mnames = mnames_good[1], num_permutations = 100,
-               edge_correction = 'translation', r = c(0,50),permute = T, 
+               edge_correction = 'translation', r = c(0,50),permute = TRUE, 
                keep_permutation_distribution = TRUE, workers = 1, overwrite = TRUE,
                xloc = 'XMin', yloc = 'YMin')
 ```

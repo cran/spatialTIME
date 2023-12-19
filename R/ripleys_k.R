@@ -111,7 +111,8 @@ ripleys_k = function(mif,
       if(edge_correction %in% c("translation", "trans")){
         edge = spatstat.explore::edge.Trans(spatstat.geom::ppp(x = spat$xloc, y = spat$yloc, window = win), W = win)
       } else if(edge_correction %in% c("isotropic", "iso")){
-        edge = spatstat.explore::edge.Ripley(spatstat.geom::ppp(x = spat$xloc, y = spat$yloc, window = win))
+        edge = spatstat.explore::edge.Ripley(spatstat.geom::ppp(x = spat$xloc, y = spat$yloc, window = win), 
+                                             r = spatstat.geom::pairdist(spatstat.geom::ppp(x = spat$xloc, y = spat$yloc, window = win)))
       } else if(edge_correction == "none"){
         edge = matrix(nrow = nrow(spat), ncol = nrow(spat), data = 1)
       }
@@ -226,7 +227,7 @@ ripleys_k = function(mif,
           dplyr::rename("Theoretical CSR" = 2, "Observed K" = 3) %>%
           dplyr::mutate(Label = unique(spat[[mif$sample_id]]),
                         Marker = marker, .before=1,
-                        r = round(r))
+                        r = r)
         return(kobs)
       }, mc.allow.recursive = TRUE, mc.preschedule = FALSE) %>% #collapse all markers for spat
         do.call(dplyr::bind_rows, .)
@@ -239,7 +240,7 @@ ripleys_k = function(mif,
           data.frame(check.names = FALSE) %>%
           dplyr::select(1,3) %>%
           dplyr::rename("Exact CSR" = 2) %>%
-          dplyr::mutate(r = round(r),
+          dplyr::mutate(r = r,
                         `Permuted CSR` = NA, .before = `Exact CSR`)
       } else {
         ns = nrow(spat)
@@ -258,6 +259,8 @@ ripleys_k = function(mif,
               } else {            
                 
                 edge = spatstat.explore::edge.Trans(i_tmp, j_tmp)
+                edge[edge == 0] = NA
+                diag(edge) = NA
                 counts = sapply(r_range, function(r){sum(edge[which(dists < r)])})
               }
               rm(dists)

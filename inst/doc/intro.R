@@ -1,4 +1,4 @@
-## ---- include = FALSE---------------------------------------------------------
+## ----include = FALSE----------------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -10,8 +10,17 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(tidyselect)
+library(RColorBrewer)
+library(pheatmap)
 
-## ---- create------------------------------------------------------------------
+getColors = function(n){
+  #https://stackoverflow.com/questions/15282580/how-to-generate-a-number-of-most-distinctive-colors-in-r
+  qual_col_pals = brewer.pal.info[brewer.pal.info$category == 'qual',]
+  col_vector = unlist(mapply(brewer.pal, qual_col_pals$maxcolors, rownames(qual_col_pals)))
+  sample(col_vector, n)
+}
+
+## ----create-------------------------------------------------------------------
 
 # Make sure the variable types are the same for deidentified_id and 
 # deidentified_sample in their corresponding datasets
@@ -26,7 +35,7 @@ x <- create_mif(clinical_data = example_clinical %>%
 x #prints a summary of how many patients, samples, and spatial files are present
 
 
-## ---- plot_bad, fig.width=14, fig.height=6,fig.align = 'left', fig.cap='Notice that using the "bad" (B) order that one would have the impression that there is a huge number of CD3+ and there are no cells that are CD3+ FOXP3+ or CD3+ CD8+. While the "good" (G) order can  better make this distiction as well as show cells that are only positive for CD3 and not postive for FOXP3 or CD8.'----
+## ----plot_bad, fig.width=14, fig.height=6,fig.align = 'left', fig.cap='Notice that using the "bad" (B) order that one would have the impression that there is a huge number of CD3+ and there are no cells that are CD3+ FOXP3+ or CD3+ CD8+. While the "good" (G) order can  better make this distiction as well as show cells that are only positive for CD3 and not postive for FOXP3 or CD8.'----
 mnames_bad <- c("CD3..CD8.","CD3..FOXP3.","CD3..Opal.570..Positive",
                 "CD8..Opal.520..Positive","FOXP3..Opal.620..Positive", 
                 "PDL1..Opal.540..Positive", "PD1..Opal.650..Positive")
@@ -48,7 +57,7 @@ bad_names <- x[["derived"]][["spatial_plots"]][[4]] +
                      labels = mnames_bad %>%
                        gsub("..Opal.*", "+", .) %>% 
                        gsub("\\.\\.", "+", .) %>% 
-                       gsub("\\.", "+", .))
+                       gsub("\\.", "+", .)) 
 
 mnames_good <- c("CD3..Opal.570..Positive","CD8..Opal.520..Positive",
                  "FOXP3..Opal.620..Positive","PDL1..Opal.540..Positive",
@@ -72,7 +81,7 @@ x$sample %>% filter(deidentified_sample == 'TMA3_[9,K].tif') %>% select(c(2, 4:1
 ## -----------------------------------------------------------------------------
 gridExtra::grid.arrange(bad_names, good_names, ncol=2)
 
-## ---- ripleys, warning = FALSE, fig.width=10, fig.height=6, fig.align = 'center'----
+## ----ripleys, warning = FALSE, fig.width=10, fig.height=6, fig.align = 'center'----
 x <- ripleys_k(mif = x, mnames = mnames_good, 
                num_permutations = 10, method = "K",
                edge_correction = 'translation', r_range = 0:100,
@@ -92,7 +101,7 @@ x$derived$univariate_Count  %>%
   
 
 
-## ---- ripleys_exact, warning = FALSE, fig.width=10, fig.height=6, fig.align = 'center'----
+## ----ripleys_exact, warning = FALSE, fig.width=10, fig.height=6, fig.align = 'center'----
 x <- ripleys_k(mif = x, mnames = mnames_good, 
                num_permutations = 10, method = "K",
                edge_correction = 'translation', r_range = 0:100,
@@ -148,7 +157,7 @@ x$derived$bivariate_Count  %>%
   geom_line(aes(color = get(x$sample_id)), show.legend = TRUE) +
   theme_bw() + scale_color_manual(values = values)
 
-## ---- NN, warning = FALSE, fig.width=10, fig.height=6, fig.align = 'center'----
+## ----NN, warning = FALSE, fig.width=10, fig.height=6, fig.align = 'center'----
 
 x <- NN_G(mif = x, mnames = mnames_good, num_permutations = 10,
                 edge_correction = 'rs', r = 0:100, workers = 1)
@@ -164,22 +173,21 @@ x$derived$univariate_NN  %>%
 
 ## ----fig.width=10, fig.height=6, fig.align = 'center'-------------------------
 x <- bi_NN_G(mif = x, mnames = c("CD3..CD8.", "CD3..FOXP3."), num_permutations = 10,
-               edge_correction = 'rs', r = seq(0,100,10),
-               keep_perm_dis = FALSE, workers = 1, overwrite = TRUE)
+               edge_correction = 'rs', r = 0:100, workers = 1, overwrite = TRUE)
 
 x$derived$bivariate_NN  %>%
-  filter(anchor == 'CD3..FOXP3.') %>%
+  filter(Anchor == 'CD3..FOXP3.') %>%
   ggplot(aes(x = r, y = `Degree of Clustering Permutation`)) +
   geom_line(aes(color = deidentified_sample), show.legend = TRUE) +
   theme_bw() +  scale_color_manual(values = values)
 
-## ---- fig.width=10, fig.height=6, fig.align = 'center', fig.cap='Cell locations for a particular TMA core where the blue cells are CD3+ cells and the grey cells are CD3- cells. Notice that there is a much larger quantity on the left than the right half indicating that there is some clustering occuring.'----
+## ----fig.width=10, fig.height=6, fig.align = 'center', fig.cap='Cell locations for a particular TMA core where the blue cells are CD3+ cells and the grey cells are CD3- cells. Notice that there is a much larger quantity on the left than the right half indicating that there is some clustering occuring.'----
 x <- plot_immunoflo(x, plot_title = "deidentified_sample", mnames = mnames_good[1], 
                     cell_type = "Classifier.Label")
 
 x[["derived"]][["spatial_plots"]][[4]]
 
-## ---- fig.width=10, fig.height=6, fig.align = 'center', fig.cap = 'Histogram displaying how much the permuted estimates of K (100 permutations) can vary. This also illustrates how different the permutation distribution and its mean (green vertical line) can be from the theoretical value (red vertical line) or observed value (blue vertical line). Lastly, this plot confirms what we see visually above in that the CD3+ cells are not uniformly distributed throughout this slide, but clustered.'----
+## ----fig.width=10, fig.height=6, fig.align = 'center', fig.cap = 'Histogram displaying how much the permuted estimates of K (100 permutations) can vary. This also illustrates how different the permutation distribution and its mean (green vertical line) can be from the theoretical value (red vertical line) or observed value (blue vertical line). Lastly, this plot confirms what we see visually above in that the CD3+ cells are not uniformly distributed throughout this slide, but clustered.'----
 x <- ripleys_k(mif = x, mnames = mnames_good[1], num_permutations = 100,
                edge_correction = 'translation', r = c(0,50),
                permute = TRUE,
@@ -210,7 +218,7 @@ x_tumor = subset_mif(x, classifier = 'Classifier.Label', level = 'Tumor', marker
 table(x$spatial[[1]]$Classifier.Label)
 table(x_tumor$spatial[[1]]$Classifier.Label)
 
-## ---- fig.width=10, fig.height=6, fig.align = 'center', fig.cap='Scatter plots showing the difference in degree of spatial clustering for CD3+, and CD8+ cells. These markers were selected since all 5 examples spatial files had at least 2 to these cells.'----
+## ----fig.width=10, fig.height=6, fig.align = 'center', fig.cap='Scatter plots showing the difference in degree of spatial clustering for CD3+, and CD8+ cells. These markers were selected since all 5 examples spatial files had at least 2 to these cells.'----
 x <- ripleys_k(mif = x, mnames = mnames_good, num_permutations = 10,
                edge_correction = 'translation', r = c(0,50), permute = T,
                keep_permutation_distribution = FALSE, workers = 1, overwrite = TRUE)
@@ -222,7 +230,7 @@ inner_join(x$clinical, x$derived$univariate_Count) %>%
   facet_wrap(Marker ~., scales = 'free') 
 
 
-## ---- fig.width=10, fig.height=6, fig.align = 'center', fig.cap='Heatmaps showing a potential descriptive visualization for identifying difference patterns within multiple markers across different populations.'----
+## ----fig.width=10, fig.height=6, fig.align = 'center', fig.cap='Heatmaps showing a potential descriptive visualization for identifying difference patterns within multiple markers across different populations.'----
 
 Rip_K_df = x$derived$univariate_Count %>% 
   filter(!(Marker %in% c('PDL1..Opal.540..Positive', 
@@ -250,12 +258,12 @@ rownames(annotation) = annotation$deidentified_sample
 annotation = annotation %>%
   select(status)
   
-pheatmap::pheatmap(Rip_K_matrix, treeheight_row = 0, treeheight_col = 0, 
+pheatmap(Rip_K_matrix, treeheight_row = 0, treeheight_col = 0, 
                    cluster_cols = FALSE, annotation = annotation)
 
 ## -----------------------------------------------------------------------------
 x <- ripleys_k(mif = x, mnames = mnames_good[1], num_permutations = 100,
-               edge_correction = 'translation', r = c(0,50),permute = T, 
+               edge_correction = 'translation', r = c(0,50),permute = TRUE, 
                keep_permutation_distribution = TRUE, workers = 1, overwrite = TRUE,
                xloc = 'XMin', yloc = 'YMin')
 
