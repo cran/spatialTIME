@@ -1,6 +1,6 @@
 Package: spatialTIME
 Title: Spatial Analysis of Vectra Immunoflourescent Data
-Version: 1.3.4-2
+Version: 1.3.4-3
 Authors@R: 
      c(person(given = "Jordan", family = "Creed", role = "aut",
              email = "jordan.h.creed@moffitt.org"),
@@ -32,7 +32,7 @@ VignetteBuilder: knitr
 URL: https://github.com/FridleyLab/spatialTIME
 BugReports: https://github.com/FridleyLab/spatialTIME/issues
 NeedsCompilation: no
-Packaged: 2023-12-19 18:12:38 UTC; 4471592
+Packaged: 2024-03-11 00:03:32 UTC; 4471592
 Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 Depends: R (>= 2.10)
@@ -48,4 +48,4 @@ Author: Jordan Creed [aut],
   Fridley Lab [cre]
 Maintainer: Fridley Lab <fridley.lab@moffitt.org>
 Repository: CRAN
-Date/Publication: 2023-12-19 18:40:02 UTC
+Date/Publication: 2024-03-11 08:00:02 UTC
