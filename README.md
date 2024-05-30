@@ -1,8 +1,15 @@
-
 <!-- badges: start -->
 
-[![tic](https://github.com/fridleylab/spatialTIME/workflows/tic/badge.svg?branch=master)](https://github.com/fridleylab/spatialTIME/actions)
+[![](http://cranlogs.r-pkg.org/badges/spatialTIME)](https://CRAN.R-project.org/package=spatialTIME)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/spatialTIME)](https://CRAN.R-project.org/package=spatialTIME)
+[![](http://www.r-pkg.org/badges/version-ago/spatialTIME)](https://CRAN.R-project.org/package=spatialTIME)
+
 <!-- badges: end -->
+
+<!--
+Other badges
+[![tic](https://github.com/fridleylab/spatialTIME/workflows/tic/badge.svg?branch=master)](https://github.com/fridleylab/spatialTIME/actions)
+-->
 
 # spatialTIME <img src="man/figures/logo.png" align="right" width="120" />
 
