@@ -1,8 +1,8 @@
-e8d0b897044a3ba38ea95aaf4d35e6ff *DESCRIPTION
+ae0e3574269dc23fe4bc407e44848045 *DESCRIPTION
 3003d86b8f2eb1a38c286b6ebf649efd *LICENSE
-889896939e8fa5ce448ee48ed890adc5 *NAMESPACE
+0a8448cf93e9c5038fc919ac9dcb7fb1 *NAMESPACE
 788966c32790c3b485057fa818c23630 *R/bi_nn_g2.R
-e04186a5f18ccd631bd98f573fcce044 *R/bi_pair_correlation.R
+8aba6789e5727d68eaf290f11a228e00 *R/bi_pair_correlation.R
 43ee1828d517112fb3bdf7cb7b209f09 *R/bi_ripleys_k.R
 f8e2c7fc2ac3419a049139d65df1da38 *R/bi_ripleys_k_WSI.R
 4612f634710c87789204f02585a339d0 *R/compute_metrics.R
@@ -31,7 +31,7 @@ b3e6f1eb479cc3afc6058fc9e1000434 *data/example_clinical.rda
 8d08293f9aa9215629e34038f0c5139c *inst/CITATION
 e4e48c40c502b5e77f0afb58ccf5d16e *inst/doc/intro.R
 0c25021edbf26595762a1ae1ebcc4927 *inst/doc/intro.Rmd
-e213bad0997ff484fcfee5c6a40fb0e3 *inst/doc/intro.html
+c56a4542876f585ff6198cf7b0b7d1e7 *inst/doc/intro.html
 fffbe77a2ab1fe2f4266c5e7080a7fcb *man/NN_G.Rd
 10fcd313b82e17540183ee7a5a7faecd *man/bi_NN_G.Rd
 3211f65048b4eb8e8f278611428717f9 *man/bi_pair_correlation.Rd
